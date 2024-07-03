@@ -124,3 +124,32 @@ sudo tpm2_createprimary -C o -P kiran123 -g sha256 -G ecc -c ECCprimary.ctx
  
  sudo tpm2_evictcontrol -C o -c ECCloadcontext.ctx -P kiran123 --output=persitenthandle.txt 0x81010003
 
+------------------------------------------------------------------------------
+
+#!/bin/bash
+ 
+# Define variables
+KEY_DIR="mok_keys"
+MOK_CRT="${KEY_DIR}/MOK.crt"
+MOK_REQUEST="${KEY_DIR}/MOK.der"
+ 
+# Function to check the success of the last command
+check_command() {
+    if [ $? -ne 0 ]; then
+        echo "Error: $1"
+        exit 1
+    fi
+}
+ 
+# Convert the MOK certificate to DER format
+openssl x509 -in ${MOK_CRT} -outform DER -out ${MOK_REQUEST}
+check_command "Failed to convert MOK certificate to DER format."
+ 
+# Enroll the MOK key
+sudo mokutil --import ${MOK_REQUEST}
+check_command "Failed to import MOK certificate using mokutil."
+ 
+# Notify the user about the next steps
+echo "MOK enrollment request has been created. Please reboot the system and follow the instructions to complete the MOK enrollment process in the MOK Manager."
+ 
+exit 0
