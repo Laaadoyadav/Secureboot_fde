@@ -2,15 +2,15 @@
 
 # Function to generate a random password
 generate_password() {
-    < /dev/urandom tr -dc 'A-Za-z0-9!"#$%&'\''()*+,-./:;<=>?@[\]^_`{|}~' | head -c 16
+    < /dev/urandom tr -dc 'A-Za-z0-9!#$%&'\''*+,-=?@^_`|~' | head -c 16
 }
 
 # Number of passwords to generate
-num_passwords=4
+num_passwords=6
 
 
 # Names to prefix passwords
-names=("Serial Number" "Mok_password" "Master_password" "TPM_owner_Password" "BIOS_password")
+names=("Serial Number" "Mok_password" "Cart_Master_password" "bbt-Admin_password" "TPM_owner_Password" "BIOS_password" "TPM_lockout_password")
 
 # Array to store passwords
 passwords=()
@@ -31,10 +31,11 @@ for ((i = 0; i <= num_passwords; i++)); do
     fi
     json_string+="\"${names[$i]}\": \"${passwords[$i]}\""
 done
-json_string+="}}"
+json_string+="}"
 
 # Output JSON to file
 output_file="passwords.json"
 echo $json_string > $output_file
 
 echo "Passwords saved to $output_file"
+
