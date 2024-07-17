@@ -1,0 +1,23 @@
+
+
+Generate an RSA Key Pair Using OpenSSL:
+
+    First, create an RSA key pair using OpenSSL. You can use the following command:
+
+    openssl genpkey -algorithm RSA -out key.pem
+
+Create a Primary Key in the TPM:
+
+    Next, create a primary key in the TPM (if it doesn’t already exist). This primary key will serve as the parent for the imported key.
+
+    tpm2_createprimary -C o -c primary.ctx
+
+Import the Key into the TPM:
+
+    Use the tpm2_import command to import the RSA key into the TPM. Specify the primary key context (primary.ctx) and the input key file (key.pem):
+
+    tpm2_import -G rsa -i key.pem -C primary.ctx -r import_key_priv.bin -u import_key_pub.bin
+
+Load the Imported Key:
+
+    Finally, load the imported key into the TPM using the tpm2_load command:
