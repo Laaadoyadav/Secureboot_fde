@@ -23,3 +23,9 @@ Load the Imported Key:
     Finally, load the imported key into the TPM using the tpm2_load command:
 
 tpm2_load -C primary.ctx -r import_key_priv.bin -u import_key_pub.bin -c key.ctx
+
+Make it persistent
+    tpm2_evictcontrol -C o -c key.ctx 0x81010001 
+
+Read the public components
+    tpm2_readpublic -c 0x81010001 -o public_key.der
