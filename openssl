@@ -21,3 +21,5 @@ Import the Key into the TPM:
 Load the Imported Key:
 
     Finally, load the imported key into the TPM using the tpm2_load command:
+
+tpm2_load -C primary.ctx -r import_key_priv.bin -u import_key_pub.bin -c key.ctx
