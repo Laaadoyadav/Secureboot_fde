@@ -91,4 +91,15 @@ aes256.key  aes_key.ctx  importkey.priv  importkey.pub  primary.ctx
 root@ubuntu20:/home/ubuntu20/test# tpm2_evictcontrol -C o -c aes_key.ctx 0x81010003 -P owner123
 persistent-handle: 0x81010003
 action: persisted
+
+root@ubuntu20:/home/ubuntu20/test# echo "hello123" > sample.txt
+root@ubuntu20:/home/ubuntu20/test# tpm2_encryptdecrypt -c 0x81010003 -o encrypted_data.bin sample.txt
+WARN: Using a weak IV, try specifying an IV
+root@ubuntu20:/home/ubuntu20/test# file encrypted_data.bin 
+encrypted_data.bin: Non-ISO extended-ASCII text, with no line terminators
+root@ubuntu20:/home/ubuntu20/test# tpm2_encryptdecrypt -c 0x81010003 --decrypt -o decrypted_data.txt encrypted_data.bin
+WARN: Using a weak IV, try specifying an IV
+root@ubuntu20:/home/ubuntu20/test# cat decrypted_data.txt 
+hello123
+
 root@ubuntu20:/home/ubuntu20/test# 
