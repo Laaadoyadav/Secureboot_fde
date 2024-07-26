@@ -1,0 +1,31 @@
+ubuntu22@Ubuntu22:~/Downloads$ cd test
+ubuntu22@Ubuntu22:~/Downloads/test$ openssl genpkey -algorithm RSA -out private_key.pem
+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+.+...+.........+..+....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+..........+...............+......+..+............+.......+...+..+......+...+.+.........+..+...+.+..............+...............+....+.....+...+....+......+...+..+...............+.......+......+..+............+.............+..................+..+.........+.+.....+.......+....................+............+...+...+...+.+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+..+......+.....+...+...+.........+.+.........+...+........+...+.........+.+..+.......+.....+.......+...+...........+.+...+..+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+................+..+............+.+..+.............+..+.+..+....+.....+...+...+....+...+......+..+...+....+......+..+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+.......+..+.+.....+............+.+......+...+.....+..........+........+...+.+...+...........+..........+.........+..+.+..+...+..........+...+............+...+......+..............+....+.....+...+....+.....+.+........+.+........+.+...........+...+...+........................+...+..........+..+....+.........+.....+.+............+...+...........+...+...+....+...+..+...+.......+.........+..+...+....+........+.............+....................+.+...+..................+..+.+.........+..+.+........+.+......+.....+..........+.........+...+............+........+...+...+......+....+..............+......+.+......+..+.............+...+.........+..+...............+....+....................+....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ubuntu22@Ubuntu22:~/Downloads/test$ ls
+private_key.pem
+ubuntu22@Ubuntu22:~/Downloads/test$ openssl rsa -pubout -in private_key.pem -out public_key.pem
+writing RSA key
+ubuntu22@Ubuntu22:~/Downloads/test$ ls
+private_key.pem  public_key.pem
+ubuntu22@Ubuntu22:~/Downloads/test$ cp /home/ubuntu22/Downloads/npp.8.1.9.3.Installer.x64.exe /home/ubuntu22/Downloads/test
+ubuntu22@Ubuntu22:~/Downloads/test$ ls
+npp.8.1.9.3.Installer.x64.exe  private_key.pem  public_key.pem
+ubuntu22@Ubuntu22:~/Downloads/test$ openssl dgst -sha256 -sign private_key.pem -out npp.8.1.9.3.Installer.x64.exe.sig npp.8.1.9.3.Installer.x64.exe
+ubuntu22@Ubuntu22:~/Downloads/test$ ls -la
+total 4312
+drwxrwxr-x 2 ubuntu22 ubuntu22    4096 Jul 26 17:07 .
+drwxr-xr-x 3 ubuntu22 ubuntu22    4096 Jul 26 17:03 ..
+-rw-rw-r-- 1 ubuntu22 ubuntu22 4394184 Jul 26 17:05 npp.8.1.9.3.Installer.x64.exe
+-rw-rw-r-- 1 ubuntu22 ubuntu22     256 Jul 26 17:07 npp.8.1.9.3.Installer.x64.exe.sig
+-rw------- 1 ubuntu22 ubuntu22    1708 Jul 26 17:04 private_key.pem
+-rw-rw-r-- 1 ubuntu22 ubuntu22     451 Jul 26 17:04 public_key.pem
+ubuntu22@Ubuntu22:~/Downloads/test$ sha256sum npp.8.1.9.3.Installer.x64.exe > npp.8.1.9.3.Installer.x64.exe.sha256
+ubuntu22@Ubuntu22:~/Downloads/test$ ls
+npp.8.1.9.3.Installer.x64.exe  npp.8.1.9.3.Installer.x64.exe.sha256  npp.8.1.9.3.Installer.x64.exe.sig  private_key.pem  public_key.pem
+ubuntu22@Ubuntu22:~/Downloads/test$ openssl dgst -sha256 -verify public_key.pem -signature npp.8.1.9.3.Installer.x64.exe.sig npp.8.1.9.3.Installer.x64.exe
+Verified OK
+ubuntu22@Ubuntu22:~/Downloads/test$ sha256sum -c npp.8.1.9.3.Installer.x64.exe.sha256
+npp.8.1.9.3.Installer.x64.exe: OK
+ubuntu22@Ubuntu22:~/Downloads/test$ 
+
