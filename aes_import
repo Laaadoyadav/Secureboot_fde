@@ -1,0 +1,94 @@
+root@ubuntu20:/home/ubuntu20/test# openssl rand -out aes256.key 32
+root@ubuntu20:/home/ubuntu20/test# ls
+aes256.key
+root@ubuntu20:/home/ubuntu20/test# tpm2_createprimary -C o -g sha256 -G rsa -c primary.ctx -P owner123
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|restricted|decrypt
+  raw: 0x30072
+type:
+  value: rsa
+  raw: 0x1
+exponent: 0x0
+bits: 2048
+scheme:
+  value: null
+  raw: 0x10
+scheme-halg:
+  value: (null)
+  raw: 0x0
+sym-alg:
+  value: aes
+  raw: 0x6
+sym-mode:
+  value: cfb
+  raw: 0x43
+sym-keybits: 128
+rsa: b49f7420ac98116f635239dcd58f01adb06a8150b60757176f24bb2158be9d6955c28b73be68b2384766dc7ce3f741f03833d44531b14f26d788115ff21c0a07e314aede4b3d843c5a4720667851d0eec782c42d086cd3836139a694828a72831604d9e2b96e736ac433600affcfcfd47f602e592b42516505149a6cd1af461398a381f7d1bb347f740a8a3d10f4315086272be74090af6fa90bf71e577163e36d09cd57d96adc8e876d45d3e4f6ab86bc7a828643b1793a2edded8bf90aa3365c002506423dc68f7e242f3b5b6e93295310884037d9dfa8d2fadaaf8134a139150dd8840f6847de105719d83bdafc9fc84051e632bdb5969aee3a2f7e02c821
+root@ubuntu20:/home/ubuntu20/test# ls
+aes256.key  primary.ctx
+root@ubuntu20:/home/ubuntu20/test# tpm2_create -C primary.ctx -g sha256 -G rsa -u importkey.pub -r importkey.priv
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: fixedtpm|fixedparent|sensitivedataorigin|userwithauth|decrypt|sign
+  raw: 0x60072
+type:
+  value: rsa
+  raw: 0x1
+exponent: 0x0
+bits: 2048
+scheme:
+  value: null
+  raw: 0x10
+scheme-halg:
+  value: (null)
+  raw: 0x0
+sym-alg:
+  value: null
+  raw: 0x10
+sym-mode:
+  value: (null)
+  raw: 0x0
+sym-keybits: 0
+rsa: b2248c7323714461b94c867bf895df747762c98518a76584956c013f84a51656772f25479302f2eae0cbe5f48dd400def570739769218da1174117385c5fafd741dd924e2326218df1ecd92e78e9ff43020cc24d960ca23f6832e86f7ab84c50689c5283eea52aea16749775df7eb51af79bdffc47cfe7f9aea947a3919dbb945437989a293897742e61dabb3cfe3a6f63dcd4543f41f7fa846c64cae077b21616a4e3c6cf2dd0940386674dbc198c1b1357efc76389ed8f94350757b2773637a9f2460ff4413dcb70467e692ff755a72d783516401626c933d60ed40e74cd8462f69b9b67aed117b975fa9dce4e5705769ffe0c41f89cde09e2b7c70bfcd629
+root@ubuntu20:/home/ubuntu20/test# ls
+aes256.key  importkey.priv  importkey.pub  primary.ctx
+root@ubuntu20:/home/ubuntu20/test# tpm2_import
+Usage: tpm2_import [<options>]
+Where <options> are:
+    [ -P | --parent-auth=<value>] [ -p | --key-auth=<value>] [ -G | --key-algorithm=<value>] [ -i | --input=<value>]
+    [ -C | --parent-context=<value>] [ -U | --parent-public=<value>] [ -r | --private=<value>] [ -u | --public=<value>]
+    [ -a | --attributes=<value>] [ -g | --hash-algorithm=<value>] [ -s | --seed=<value>] [ -L | --policy=<value>]
+    [ -k | --encryption-key=<value>] [ - | --passin=<value>] [ - | --cphash=<value>]
+root@ubuntu20:/home/ubuntu20/test# tpm2_import -C primary.ctx -G aes -u importkey.pub -r importkey.priv -i aes256.key
+name-alg:
+  value: sha256
+  raw: 0xb
+attributes:
+  value: userwithauth|decrypt|sign
+  raw: 0x60040
+type:
+  value: symcipher
+  raw: 0x25
+sym-alg:
+  value: aes
+  raw: 0x6
+sym-mode:
+  value: null
+  raw: 0x10
+sym-keybits: 256
+symcipher: 2c907fd5a79cfb69721ea085c80082647824a063272ab122e6a26e448229848b
+root@ubuntu20:/home/ubuntu20/test# ls
+aes256.key  importkey.priv  importkey.pub  primary.ctx
+root@ubuntu20:/home/ubuntu20/test# tpm2_load -C primary.ctx -r importkey.priv -u importkey.pub -c aes_key.ctx
+name: 000b683f4629e94b4cdd288680c92dac8bab55935c1bbe149acb207e04cffcc243e9
+root@ubuntu20:/home/ubuntu20/test# ls
+aes256.key  aes_key.ctx  importkey.priv  importkey.pub  primary.ctx
+root@ubuntu20:/home/ubuntu20/test# tpm2_evictcontrol -C o -c aes_key.ctx 0x81010003 -P owner123
+persistent-handle: 0x81010003
+action: persisted
+root@ubuntu20:/home/ubuntu20/test# 
